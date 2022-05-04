@@ -42,9 +42,9 @@ spec:
           value: "8080"
         # toggle Cloud Trace export
         - name: ENABLE_TRACING
-          value: "true"
+          value: "false"
         - name: ENABLE_METRICS
-          value: "true"
+          value: "false"
         - name: POLL_MS
           value: "100"
         - name: CACHE_SIZE
@@ -109,4 +109,17 @@ spec:
   - name: http
     port: 8080
     targetPort: 8080
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: balancereaderhpa
+spec:
+  maxReplicas: 3
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: balancereader
+  targetCPUUtilizationPercentage: 50
 # [END gke_boa_kubernetes_manifests_balance_reader_service_balancereader]
