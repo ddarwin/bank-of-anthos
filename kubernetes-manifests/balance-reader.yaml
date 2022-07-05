@@ -80,10 +80,10 @@ spec:
           initialDelaySeconds: 60
           periodSeconds: 5
           timeoutSeconds: 10
-        livenessProbe:
-          httpGet:
-            path: /healthy
-            port: 8080
+#        livenessProbe:
+#          httpGet:
+#            path: /healthy
+#            port: 8080
           initialDelaySeconds: 120
           periodSeconds: 5
           timeoutSeconds: 10
@@ -122,4 +122,18 @@ spec:
     kind: Deployment
     name: balancereader
   targetCPUUtilizationPercentage: 50
-# [END gke_boa_kubernetes_manifests_balance_reader_service_balancereader]
+# [END gke_boa_kubernetes_manifests_balance_reader_service_balancereader]---
+# [Start balance-reader-service horizontal pod auto-scaling configuration]
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: balancereaderhpa
+spec:
+  maxReplicas: 3
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: balancereader
+  targetCPUUtilizationPercentage: 50
+# [END balance-reader-service horizontal pod auto-scaling configuration]
